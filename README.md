@@ -1,5 +1,7 @@
 # facenet-cli
 
+原始碼與 Issue：**[github.com/mz038197/facenet-cli](https://github.com/mz038197/facenet-cli)**
+
 以 [facenet-pytorch](https://github.com/timesler/facenet-pytorch) 為後端的 **Click** CLI，封裝常見人臉 embedding／比對流程，並可選 `--json` 輸出供自動化或 agent 使用。
 
 ## 專案架構
@@ -23,13 +25,14 @@ facenet-cli/
 │   ├── generate_embeddings.py
 │   └── face_recognition.py
 └── skills/
-    └── SKILL.md            # Agent 技能說明（可選）
+    └── facenet-cli/
+        └── SKILL.md        # Agent 技能說明（可選）
 ```
 
-安裝後主程式入口為 **`fnet`**（定義於 `pyproject.toml` / `setup.py` 的 `console_scripts`）。亦可不經安裝，在專案根目錄以模組方式執行：
+安裝後主程式入口為 **`fnet`**（定義於 `pyproject.toml` / `setup.py` 的 `console_scripts`）。亦可不經安裝，在專案根目錄以模組方式執行（需已用 `uv` 建立環境並安裝相依）：
 
 ```bash
-py -3.13 -m cli_anything.facenet --help
+uv run python -m cli_anything.facenet --help
 ```
 
 ## 功能概覽
@@ -48,32 +51,88 @@ py -3.13 -m cli_anything.facenet --help
 
 ## 安裝
 
-在專案根目錄（`facenet-cli`）執行：
+本專案一律以 **[uv](https://docs.astral.sh/uv/)** 安裝（請先安裝 uv）。需 **Python 3.13+**（與 `requires-python` 一致）。
+
+### 從本機目錄（clone 或已下載專案）
+
+在專案根目錄（`facenet-cli`）：
 
 ```bash
-py -3.13 -m pip install -e .
+uv venv --python 3.13
+uv sync
 ```
 
-使用 `uv`（推薦）：
+若未使用鎖檔或僅需可編輯安裝：
 
 ```bash
-uv venv .venv --python 3.13
+uv venv --python 3.13
+uv pip install -e .
+```
+
+Windows 若需明確指定 venv 內的 Python：
+
+```bash
 uv pip install --python .venv\Scripts\python.exe -e .
 ```
 
-以 **uv tool** 安裝成可全域呼叫的指令（套件名稱為 `facenet-cli`）：
+以 **uv tool** 將 `fnet` 安裝成可全域呼叫的指令（套件名稱 `facenet-cli`）：
 
 ```bash
 uv tool install --from . facenet-cli
 ```
 
-不使用 venv、直接裝到目前 Python：
+不使用專案內 venv、直接裝到目前系統的 Python：
 
 ```bash
 uv pip install --system -e .
 ```
 
-> 需 Python **3.13 或以上**，請以符合版本的解譯器執行 `pip` / `uv`。
+### 從 Git 遠端安裝
+
+儲存庫：**<https://github.com/mz038197/facenet-cli>**
+
+**直接裝到目前 uv 管理的環境**（預設分支 `main`）：
+
+```bash
+uv pip install git+https://github.com/mz038197/facenet-cli.git
+```
+
+**指定分支、tag 或 commit**（範例為 `main`）：
+
+```bash
+uv pip install "git+https://github.com/mz038197/facenet-cli.git@main"
+```
+
+**以全域 `uv tool` 安裝 `fnet`（不進專案目錄）**：
+
+```bash
+uv tool install git+https://github.com/mz038197/facenet-cli.git
+```
+
+**指定分支**：
+
+```bash
+uv tool install "git+https://github.com/mz038197/facenet-cli.git@main"
+```
+
+**先 clone 再與本機相同流程**：
+
+```bash
+git clone https://github.com/mz038197/facenet-cli.git
+cd facenet-cli
+uv venv --python 3.13
+uv sync
+```
+
+### 安裝 Cursor Agent Skill（可選）
+
+若使用支援 **skills** 的環境（例如 Cursor），可從本儲存庫加入附帶的 Agent 技能說明：
+
+```bash
+npx skills add mz038197/facenet-cli
+```
+
+執行後會取得 `skills/facenet-cli/SKILL.md` 中的指引（與 Python／`fnet` CLI 安裝無關，僅輔助 AI 操作本專案）。
 
 ## 指令說明與範例
 
@@ -162,13 +221,7 @@ fnet --json embedding compare --image1 a.jpg --image2 b.jpg --threshold 1.2 --dr
 
 ## 測試
 
-需已安裝 `pytest`（若未列入專案依賴，請自行 `pip install pytest`）：
-
-```bash
-pytest -v --tb=no cli_anything/facenet/tests/
-```
-
-或使用 `uv`：
+需已安裝 `pytest`（若未列入專案依賴，在專案目錄執行 `uv pip install pytest`）：
 
 ```bash
 uv run pytest -v --tb=no cli_anything/facenet/tests/
@@ -178,7 +231,7 @@ uv run pytest -v --tb=no cli_anything/facenet/tests/
 
 ```bash
 set CLI_ANYTHING_FORCE_INSTALLED=1
-pytest -v -s --tb=no cli_anything/facenet/tests/test_full_e2e.py
+uv run pytest -v -s --tb=no cli_anything/facenet/tests/test_full_e2e.py
 ```
 
 （PowerShell 請改為：`$env:CLI_ANYTHING_FORCE_INSTALLED=1`）
