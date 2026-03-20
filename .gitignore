@@ -1,0 +1,66 @@
+# Byte-compiled / 最佳化
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# 虛擬環境
+.venv/
+venv/
+env/
+.env/
+.env.*
+!.env.example
+
+# 打包與建置
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+pip-wheel-metadata/
+
+# 測試與覆蓋率
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# 型別檢查快取
+.dmypy.json
+dmypy.json
+
+# 本機設定與 IDE（依需求保留並提交 .vscode 共用設定）
+.idea/
+*.swp
+*.swo
+*~
+
+# 作業系統
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# 日誌與暫存
+*.log
+*.tmp
+*.temp
+
+# 常見大型模型 / 權重（若需納入版控請刪除或改為 ! 例外規則）
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.h5
+*.pb
+*.safetensors
